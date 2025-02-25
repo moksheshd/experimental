@@ -26,7 +26,10 @@ Feature: Login Load Test
     And request { username: '#(username)', password: '#(password)' }
     When method POST
     Then status 200
-    And match response contains { token: '#notnull' }
+    And match response.status == 'OK'
+    And match response.data.accessToken == '#notnull'
+    And match response.data.refreshToken == '#notnull'
+    And match response.data.tokenType == 'Bearer'
 
     Examples:
       | read('users.csv') |
