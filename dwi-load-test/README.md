@@ -15,7 +15,7 @@ This project demonstrates how to use Karate with Gatling for API load testing.
 To run the Gatling load test, execute the following command:
 
 ```bash
-./gradlew gatlingRun
+./gradlew runLoadTest
 ```
 
 This will:
