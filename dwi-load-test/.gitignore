@@ -26,6 +26,9 @@ bin/
 # Logs
 *.log
 
+# Data files
+*.csv
+
 # OS specific
 .DS_Store
 Thumbs.db
