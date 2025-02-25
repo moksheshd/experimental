@@ -3,9 +3,13 @@ package com.mokshesh
 import com.intuit.karate.gatling.PreDef._
 import io.gatling.core.Predef._
 import scala.concurrent.duration._
+import io.gatling.core.controller.inject.open.OpenInjectionStep
 
 class LoadSimulation extends Simulation {
 
+  // Disable Gatling console logging
+  System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "warn")
+  
   val protocol = karateProtocol()
   
   // Configure protocol with specific details
@@ -17,15 +21,20 @@ class LoadSimulation extends Simulation {
   // Full workflow scenario that includes all API calls
   val fullWorkflowScenario = scenario("Full API Workflow")
     .feed(csvFeeder)
+    // Login once
     .exec(karateFeature("classpath:login.feature"))
+    // Switch facility once
     .exec(karateFeature("classpath:switch-facility.feature"))
-    .exec(karateFeature("classpath:create-job.feature"))
+    // Continuously create jobs in a loop
+    .forever {
+      exec(karateFeature("classpath:create-job.feature"))
+    }
 
   // Define the load simulation
   setUp(
     fullWorkflowScenario.inject(
-      // Start with 1 user and ramp up to 1000 users over 60 seconds
-      rampUsers(2).during(10.seconds)
+      // Just 2 users logged in at the start
+      atOnceUsers(2)
     ).protocols(protocol)
-  ).maxDuration(15.seconds) // Maximum test duration
+  ).maxDuration(15.seconds) // Maximum test duration of 90 seconds
 }
