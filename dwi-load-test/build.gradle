@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id 'scala'
     id 'application'
 }
 
@@ -12,7 +13,19 @@ repositories {
 
 dependencies {
     implementation group: 'io.karatelabs', name: 'karate-core', version: '1.5.1'
+    testImplementation group: 'io.karatelabs', name: 'karate-junit5', version: '1.5.1'
+    
+    // Gatling dependencies
+    implementation group: 'io.gatling', name: 'gatling-core', version: '3.13.4'
+    implementation group: 'io.gatling.highcharts', name: 'gatling-charts-highcharts', version: '3.13.4'
+    implementation group: 'io.gatling', name: 'gatling-app', version: '3.13.4'
+    
+    // Scala library
+    implementation group: 'org.scala-lang', name: 'scala-library', version: '2.13.10'
+    
+    // Karate-Gatling integration
     implementation group: 'io.karatelabs', name: 'karate-gatling', version: '1.5.1'
+    
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.12.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.12.0'
 }
@@ -26,6 +39,26 @@ test {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+// Task to run the JUnit-based load test
+task runLoadTest(type: JavaExec) {
+    description = 'Run Karate load test with JUnit'
+    group = 'Load Test'
+    
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.mokshesh.LoginLoadTest'
+}
+
+// Task to run the Gatling load test
+task gatlingRun(type: JavaExec) {
+    description = 'Run Gatling load test'
+    group = 'Load Test'
+    
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'io.gatling.app.Gatling'
+    
+    args '--simulation', 'com.mokshesh.LoginLoadSimulation', '--results-folder', "${buildDir}/gatling-results", '--binaries-folder', "${buildDir}/classes/scala/test"
 }
