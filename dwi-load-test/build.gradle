@@ -51,14 +51,3 @@ task runLoadTest(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'com.mokshesh.LoginLoadTest'
 }
-
-// Task to run the Gatling load test
-task gatlingRun(type: JavaExec) {
-    description = 'Run Gatling load test'
-    group = 'Load Test'
-    
-    classpath = sourceSets.test.runtimeClasspath
-    mainClass = 'io.gatling.app.Gatling'
-    
-    args '--simulation', 'com.mokshesh.LoginLoadSimulation', '--results-folder', "${buildDir}/gatling-results", '--binaries-folder', "${buildDir}/classes/scala/test"
-}
