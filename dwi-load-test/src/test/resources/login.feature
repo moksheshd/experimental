@@ -30,6 +30,10 @@ Feature: Login Load Test
     And match response.data.accessToken == '#notnull'
     And match response.data.refreshToken == '#notnull'
     And match response.data.tokenType == 'Bearer'
+    
+    # Store the accessToken for use in subsequent API calls
+    * def loginToken = response.data.accessToken
+    * karate.set('loginToken', loginToken)
 
     Examples:
       | read('users.csv') |

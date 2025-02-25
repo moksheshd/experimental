@@ -58,7 +58,7 @@ task runGatlingTest(type: JavaExec) {
     classpath = sourceSets.test.runtimeClasspath
     mainClass = 'io.gatling.app.Gatling'
     args = [
-        '--simulation', 'com.mokshesh.LoginLoadSimulation',
+        '--simulation', 'com.mokshesh.LoadSimulation',
         '--results-folder', "${buildDir}/reports/gatling"
     ]
     
